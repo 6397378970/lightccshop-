@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 3D FLYING PARTICLES BACKGROUND -->
+    <!-- 3D FLYING PARTICLES -->
     <div id="particles-3d">
         <div class="flying-particle"></div>
         <div class="flying-particle"></div>
@@ -134,9 +134,16 @@
                 <div id="purchaseCardInfo"></div>
                 
                 <div class="qr-section">
-                    <!-- Updated QR Code -->
-                    <img src="https://image-link.edgeone.app/1785080236661-0jmfpa.jpg" alt="PhonePe QR" class="qr-code">
-                    <p class="qr-label">📱 Scan & Pay via PhonePe/GPay</p>
+                    <!-- 🔴 PHONEPE QR CODE 🔴 -->
+                    <div style="text-align: center; padding: 10px;">
+                        <img src="https://files.catbox.moe/3stiyh.jpg" alt="PhonePe QR" class="qr-code" style="max-width: 250px; border-radius: 15px; border: 2px solid rgba(0,150,255,0.2);">
+                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <span style="color: #ff6b6b; font-weight: bold;">📱 PhonePe</span>
+                            <span style="color: #00ff88;">✅ ACCEPTED HERE</span>
+                        </div>
+                        <p style="color: #66aaff; margin-top: 5px; font-size: 13px;">Scan & Pay Using PhonePe App</p>
+                        <p style="color: #8888aa; font-size: 12px;">LUCKYCHAUDHARY</p>
+                    </div>
                     <p class="qr-amount">Amount: ₹<span id="purchaseAmount">0</span></p>
                 </div>
 
@@ -144,7 +151,8 @@
                     <h3>📸 Verify Payment</h3>
                     <input type="file" id="screenshotUpload" accept="image/*" required>
                     <input type="text" id="transactionId" placeholder="UTR / Transaction ID" required>
-                    <button onclick="verifyPayment()">✅ VERIFY PAYMENT</button>
+                    <button onclick="verifyPayment()">✅ VERIFY & COMPLETE PURCHASE</button>
+                    <p style="color: #ffaa00; font-size: 11px; margin-top: 10px;">⚠️ Card details will be revealed after admin approval</p>
                 </div>
             </div>
         </div>
