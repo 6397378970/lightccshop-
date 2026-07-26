@@ -5,16 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CYPHERPRO CC SHOP</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- 3D Particle Background -->
-        <div id="particles-3d"></div>
-
         <!-- Header -->
         <div class="header">
             <div class="logo-section">
@@ -23,9 +16,12 @@
                 <span class="secure">🔒 SECURE ACCOUNT</span>
             </div>
             <div class="account-section">
-                <a href="#" class="login-btn" onclick="showAuthModal('login')">🔐 LOGIN</a>
-                <a href="#" class="telegram-btn" onclick="joinTelegram()">💬 JOIN TELEGRAM</a>
-                <a href="#" class="support-btn" onclick="contactSupport()">🩷 SUPPORT</a>
+                <span class="user-badge" id="userBadge" style="display:none;">👤 <span id="userNameDisplay">User</span></span>
+                <a href="#" class="login-btn" id="authBtn" onclick="showAuthModal('login')">🔐 LOGIN</a>
+                <a href="#" class="login-btn" id="logoutBtn" style="display:none;" onclick="logoutUser()">🚪 LOGOUT</a>
+                <a href="#" class="telegram-btn" onclick="window.open('https://t.me/vouches_light')">💬 JOIN TELEGRAM</a>
+                <a href="#" class="support-btn" onclick="window.open('https://t.me/light_speedy')">🩷 SUPPORT</a>
+                <a href="#" class="support-btn" id="dashboardBtn" style="display:none; border-color: #00ff88; color: #00ff88;" onclick="window.location.href='dashboard.html'">📊 DASHBOARD</a>
             </div>
         </div>
 
@@ -37,7 +33,7 @@
             <span class="online-users" id="onlineUsers">👤 142 Online</span>
         </div>
 
-        <!-- Filter Tabs -->
+        <!-- Filters -->
         <div class="filters">
             <button class="filter-btn active" onclick="filterCards('all')">ALL</button>
             <button class="filter-btn" onclick="filterCards('visa')">VISA</button>
@@ -62,11 +58,9 @@
         </div>
 
         <!-- Cards Grid -->
-        <div class="cards-grid" id="cardsGrid">
-            <!-- Cards will be dynamically loaded -->
-        </div>
+        <div class="cards-grid" id="cardsGrid"></div>
 
-        <!-- Auth Modal (Login/Signup) -->
+        <!-- Auth Modal -->
         <div id="authModal" class="modal">
             <div class="modal-content auth-modal">
                 <span class="close" onclick="closeModal('authModal')">&times;</span>
@@ -75,7 +69,6 @@
                     <button class="auth-tab" onclick="switchAuthTab('signup')">SIGN UP</button>
                 </div>
                 
-                <!-- Login Form -->
                 <form id="loginForm" onsubmit="handleLogin(event)" class="auth-form active">
                     <h2>🔐 WELCOME BACK</h2>
                     <input type="email" id="loginEmail" placeholder="Email Address" required>
@@ -85,7 +78,6 @@
                     <button type="button" onclick="googleLogin()" class="google-btn">🔵 Continue with Google</button>
                 </form>
 
-                <!-- Signup Form -->
                 <form id="signupForm" onsubmit="handleSignup(event)" class="auth-form">
                     <h2>📝 CREATE ACCOUNT</h2>
                     <input type="text" id="signupName" placeholder="Full Name" required>
@@ -107,14 +99,12 @@
                 <h2>💰 PURCHASE CARD</h2>
                 <div id="purchaseCardInfo"></div>
                 
-                <!-- PhonePe QR -->
                 <div class="qr-section">
                     <img src="phonepe-qr.jpg" alt="PhonePe QR" class="qr-code">
                     <p class="qr-label">📱 Scan & Pay via PhonePe</p>
                     <p class="qr-amount">Amount: ₹<span id="purchaseAmount">0</span></p>
                 </div>
 
-                <!-- Payment Verification -->
                 <div class="payment-verify">
                     <h3>📸 Verify Payment</h3>
                     <input type="file" id="screenshotUpload" accept="image/*" required>
@@ -125,7 +115,6 @@
         </div>
     </div>
 
-    <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
