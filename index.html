@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light CC Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <h1 class="main-title">LIGHT CC SHOP</h1>
+                <span class="uid">UID-656254</span>
+                <span class="secure">🔒 SECURE ACCOUNT</span>
+            </div>
+            <div class="account-section">
+                <a href="#" class="account-btn" onclick="toggleLogin()">👤 ACCOUNT</a>
+                <a href="#" class="telegram-btn" onclick="joinTelegram()">💬 JOIN TELEGRAM</a>
+                <a href="#" class="support-btn" onclick="contactSupport()">🩷 SUPPORT</a>
+            </div>
+        </div>
+
+        <!-- Node Info -->
+        <div class="node-info">
+            <span class="vx">VX</span>
+            <span class="node">NODE: GLOBAL-01</span>
+            <span class="unverified">⚠ UNVERIFIED REGISTRY</span>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterCards('all')">ALL</button>
+            <button class="filter-btn" onclick="filterCards('visa')">VISA</button>
+            <button class="filter-btn" onclick="filterCards('mastercard')">MASTERCARD</button>
+            <button class="filter-btn" onclick="filterCards('rupay')">RUPAY</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-label">TERMINAL USERS</span>
+                <span class="stat-value" id="terminalUsers">6489</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">3D0 NETWORK TRAFFIC</span>
+                <span class="stat-value" id="networkTraffic">6,384,532</span>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid" id="cardsGrid">
+            <!-- Cards will be dynamically loaded -->
+        </div>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>🔐 ADMIN LOGIN</h2>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <input type="text" id="username" placeholder="Username" value="chaudhary456light">
+                    <input type="password" id="password" placeholder="Password" value="lightspeedy">
+                    <button type="submit">LOGIN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
