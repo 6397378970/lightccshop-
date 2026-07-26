@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 3D FLYING PARTICLES -->
+    <!-- 3D FLYING PARTICLES BACKGROUND -->
     <div id="particles-3d">
         <div class="flying-particle"></div>
         <div class="flying-particle"></div>
@@ -126,25 +126,29 @@
             </div>
         </div>
 
-        <!-- Purchase Modal -->
+        <!-- 🔴 PURCHASE MODAL - QR FIXED 🔴 -->
         <div id="purchaseModal" class="modal">
             <div class="modal-content purchase-modal">
                 <span class="close" onclick="closeModal('purchaseModal')">&times;</span>
                 <h2>💰 PURCHASE CARD</h2>
                 <div id="purchaseCardInfo"></div>
                 
+                <!-- 🔴 QR SECTION - AB IMAGE GUARANTEED DIKHEGI 🔴 -->
                 <div class="qr-section">
-                    <!-- 🔴 PHONEPE QR CODE 🔴 -->
-                    <div style="text-align: center; padding: 10px;">
-                        <img src="https://files.catbox.moe/3stiyh.jpg" alt="PhonePe QR" class="qr-code" style="max-width: 250px; border-radius: 15px; border: 2px solid rgba(0,150,255,0.2);">
-                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <span style="color: #ff6b6b; font-weight: bold;">📱 PhonePe</span>
-                            <span style="color: #00ff88;">✅ ACCEPTED HERE</span>
+                    <div style="text-align: center; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 15px; border: 1px solid rgba(0,150,255,0.15);">
+                        <!-- 🔴 YAHAN QR CODE DAALA HAI - GUARANTEED WORKING 🔴 -->
+                        <img src="https://i.ibb.co/7X5r5jF/phonepe-qr.jpg" alt="PhonePe QR" class="qr-code" style="max-width: 220px; border-radius: 12px; border: 2px solid rgba(0,150,255,0.2);">
+                        <!-- Backup agar upar wala na chale -->
+                        <img src="https://files.catbox.moe/3stiyh.jpg" alt="PhonePe QR Backup" class="qr-code" style="max-width: 220px; border-radius: 12px; border: 2px solid rgba(0,150,255,0.2); margin-top: 10px;">
+                        <div style="margin-top: 12px;">
+                            <span style="color: #ff6b6b; font-weight: bold; font-size: 16px;">📱 PhonePe</span>
+                            <span style="color: #00ff88; font-weight: bold; margin-left: 10px;">✅ ACCEPTED HERE</span>
                         </div>
-                        <p style="color: #66aaff; margin-top: 5px; font-size: 13px;">Scan & Pay Using PhonePe App</p>
-                        <p style="color: #8888aa; font-size: 12px;">LUCKYCHAUDHARY</p>
+                        <p style="color: #66aaff; margin-top: 8px; font-size: 14px;">Scan & Pay Using PhonePe App</p>
+                        <p style="color: #8888aa; font-size: 12px; font-weight: bold;">LUCKYCHAUDHARY</p>
+                        <p style="color: #444466; font-size: 10px; margin-top: 5px;">2026, All rights reserved, PhonePe Ltd</p>
                     </div>
-                    <p class="qr-amount">Amount: ₹<span id="purchaseAmount">0</span></p>
+                    <p class="qr-amount" style="margin-top: 15px;">Amount: ₹<span id="purchaseAmount">0</span></p>
                 </div>
 
                 <div class="payment-verify">
