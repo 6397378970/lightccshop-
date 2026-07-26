@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CYPHERPRO CC SHOP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 150, 255, 0.3);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .dashboard-header h1 {
+            background: linear-gradient(135deg, #0099ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 28px;
+        }
+        .dashboard-header a {
+            color: #66aaff;
+            text-decoration: none;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        .dashboard-header a:hover {
+            background: rgba(0, 150, 255, 0.1);
+            border-color: #0099ff;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(0, 150, 255, 0.03);
+            border: 1px solid rgba(0, 150, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card .label {
+            font-size: 12px;
+            color: #66aaff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #0099ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #66aaff;
+        }
+        .empty-state a {
+            color: #0099ff;
+            text-decoration: none;
+            border: 1px solid #0099ff;
+            padding: 10px 30px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        .empty-state a:hover {
+            background: #0099ff;
+            color: #ffffff;
+        }
+        .user-badge {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: #00ff88;
+            font-size: 13px;
+            display: inline-block;
+        }
+        .logout-btn {
+            color: #ff6b6b !important;
+            border-color: rgba(255, 107, 107, 0.3) !important;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.1) !important;
+            border-color: #ff6b6b !important;
+        }
+        .purchased-card {
+            background: rgba(0, 150, 255, 0.02);
+            border: 1px solid rgba(0, 150, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .purchased-card:hover {
+            border-color: #00ff88;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.05);
+        }
+        .purchased-card .cvv-reveal {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 3px 12px;
+            border-radius: 20px;
+            color: #00ff88;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>📊 CYPHER<span style="color: #00ff88;">PRO</span> DASHBOARD</h1>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <span class="user-badge" id="userNameDisplay">👤 User</span>
+                <a href="#" class="logout-btn" onclick="logoutUser()">🚪 LOGOUT</a>
+                <a href="index.html">🏠 HOME</a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Purchased Cards</div>
+                <div class="value" id="purchasedCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total Spent</div>
+                <div class="value" id="totalSpent">₹0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Member Since</div>
+                <div class="value" id="memberSince" style="font-size: 18px;">-</div>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="purchasedCardsGrid">
+            <div class="empty-state">
+                <h2>🛒 No Purchased Cards Yet</h2>
+                <p style="margin-top: 10px; color: #8888aa;">Go to shop and buy some premium cards!</p>
+                <a href="index.html">🛍️ GO TO SHOP</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============= CHECK LOGIN =============
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('userNameDisplay').textContent = '👤 ' + (currentUser.name || currentUser.email);
+
+        // ============= LOAD PURCHASES =============
+        function loadPurchases() {
+            const purchases = JSON.parse(localStorage.getItem('purchases_' + currentUser.email) || '[]');
+            const grid = document.getElementById('purchasedCardsGrid');
+            document.getElementById('purchasedCount').textContent = purchases.length;
+
+            const totalSpent = purchases.reduce((sum, p) => sum + (p.price || 0), 0);
+            document.getElementById('totalSpent').textContent = '₹' + totalSpent;
+
+            if (currentUser.createdAt) {
+                document.getElementById('memberSince').textContent = new Date(currentUser.createdAt).toLocaleDateString();
+            }
+
+            if (purchases.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <h2>🛒 No Purchased Cards Yet</h2>
+                        <p style="margin-top: 10px; color: #8888aa;">Go to shop and buy some premium cards!</p>
+                        <a href="index.html">🛍️ GO TO SHOP</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = purchases.map((purchase, index) => `
+                <div class="purchased-card">
+                    <div class="card-type">${(purchase.type || 'card').toUpperCase()}</div>
+                    <div class="card-number">${purchase.number || '****'}</div>
+                    <div class="card-details">
+                        <span>EXP: ${purchase.exp || 'N/A'}</span>
+                        <span class="cvv-reveal">🔓 CVV: ${purchase.cvv || '***'}</span>
+                    </div>
+                    <div class="card-balance">BAL: $${purchase.balance || '0'}</div>
+                    <div class="card-price">💰 Purchased: ₹${purchase.price || 0}</div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #66aaff;">
+                        📅 ${purchase.purchasedAt ? new Date(purchase.purchasedAt).toLocaleDateString() : 'N/A'}
+                        <br>📋 UTR: ${purchase.transactionId || 'N/A'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============= LOGOUT =============
+        function logoutUser() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAdmin');
+            window.location.href = 'index.html';
+        }
+
+        // ============= INIT =============
+        loadPurchases();
+    </script>
+</body>
+</html>
