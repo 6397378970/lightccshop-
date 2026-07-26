@@ -1,47 +1,93 @@
 // ============= DATA =============
 let currentUser = null;
 let allCards = [];
-let selectedCardId = null;
+let selectedCardIndex = null;
+let isAdminMode = false;
+
+// ============= SECRET ADMIN CREDENTIALS =============
 const ADMIN_USERNAME = 'chaudhary456light';
 const ADMIN_PASSWORD = 'lightspeedy';
 
-// ============= DEFAULT CARDS =============
+// ============= DEFAULT CARDS (5 Cards Pre-added) =============
 const defaultCards = [
-    { type: 'visa', name: 'HDCF PREMIUM', number: '4060 6388 2281 4074', exp: '08/29', cvv: '123', balance: '2500', price: 100, status: 'instock' },
-    { type: 'visa', name: 'AVIS SUBSCRIBE', number: '4512 7890 3456 7890', exp: '12/28', cvv: '456', balance: '1800', price: 80, status: 'instock' },
-    { type: 'mastercard', name: 'GOLD ELITE', number: '5423 4567 8901 2345', exp: '06/30', cvv: '789', balance: '3200', price: 150, status: 'instock' },
-    { type: 'rupay', name: 'SELECT PLUS', number: '6521 3456 7890 1234', exp: '03/27', cvv: '321', balance: '1100', price: 50, status: 'outstock' },
-    { type: 'visa', name: 'SIGNATURE BLACK', number: '4789 0123 4567 8901', exp: '09/29', cvv: '654', balance: '4500', price: 120, status: 'soldout' }
+    {
+        type: 'visa',
+        name: 'HDCF PREMIUM',
+        number: '4060 6388 2281 4074',
+        exp: '08/29',
+        cvv: '123',
+        balance: '2500',
+        price: 100,
+        status: 'instock'
+    },
+    {
+        type: 'visa',
+        name: 'AVIS SUBSCRIBE',
+        number: '4512 7890 3456 7890',
+        exp: '12/28',
+        cvv: '456',
+        balance: '1800',
+        price: 80,
+        status: 'instock'
+    },
+    {
+        type: 'mastercard',
+        name: 'GOLD ELITE',
+        number: '5423 4567 8901 2345',
+        exp: '06/30',
+        cvv: '789',
+        balance: '3200',
+        price: 150,
+        status: 'instock'
+    },
+    {
+        type: 'rupay',
+        name: 'SELECT PLUS',
+        number: '6521 3456 7890 1234',
+        exp: '03/27',
+        cvv: '321',
+        balance: '1100',
+        price: 50,
+        status: 'outstock'
+    },
+    {
+        type: 'visa',
+        name: 'SIGNATURE BLACK',
+        number: '4789 0123 4567 8901',
+        exp: '09/29',
+        cvv: '654',
+        balance: '4500',
+        price: 120,
+        status: 'soldout'
+    }
 ];
 
 // ============= INIT =============
 function init() {
-    // Load cards from localStorage or use default
     let saved = localStorage.getItem('shopCards');
     if (saved) {
         allCards = JSON.parse(saved);
     } else {
-        allCards = defaultCards;
+        allCards = JSON.parse(JSON.stringify(defaultCards));
         localStorage.setItem('shopCards', JSON.stringify(allCards));
     }
     
-    // Check if user logged in
     let user = localStorage.getItem('currentUser');
     if (user) {
         currentUser = JSON.parse(user);
         updateUIForUser();
     }
     
+    if (localStorage.getItem('secretAdmin') === 'true') {
+        isAdminMode = true;
+        showSecretAdminPanel();
+    }
+    
     renderCards('all');
     document.getElementById('totalCards').textContent = allCards.length;
-    
-    // Check admin access
-    if (localStorage.getItem('isAdmin') === 'true') {
-        showAdminPanel();
-    }
 }
 
-// ============= AUTH =============
+// ============= AUTH FUNCTIONS =============
 
 function showAuthModal(type) {
     document.getElementById('authModal').style.display = 'flex';
@@ -75,7 +121,6 @@ function handleSignup(e) {
     if (password !== confirm) { alert('❌ Passwords do not match!'); return; }
     if (password.length < 6) { alert('❌ Password must be at least 6 characters!'); return; }
     
-    // Check if user already exists
     let users = JSON.parse(localStorage.getItem('users') || '[]');
     if (users.find(u => u.email === email)) {
         alert('❌ User already exists! Please login.');
@@ -87,6 +132,7 @@ function handleSignup(e) {
     localStorage.setItem('users', JSON.stringify(users));
     
     alert('✅ Account created successfully! Please login.');
+    document.getElementById('signupForm').reset();
     closeModal('authModal');
     switchAuthTab('login');
 }
@@ -96,18 +142,15 @@ function handleLogin(e) {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     
-    // Check admin credentials
+    // ========== SECRET ADMIN LOGIN ==========
     if (email === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        if (currentUser) {
-            localStorage.setItem('isAdmin', 'true');
-            alert('✅ Admin access granted!');
-            closeModal('authModal');
-            showAdminPanel();
-            return;
-        } else {
-            alert('⚠️ Please login with your account first!');
-            return;
-        }
+        localStorage.setItem('secretAdmin', 'true');
+        isAdminMode = true;
+        alert('✅ Access granted!');
+        closeModal('authModal');
+        document.getElementById('loginForm').reset();
+        showSecretAdminPanel();
+        return;
     }
     
     let users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -122,19 +165,23 @@ function handleLogin(e) {
     localStorage.setItem('currentUser', JSON.stringify(user));
     alert('✅ Login successful!');
     closeModal('authModal');
+    document.getElementById('loginForm').reset();
     updateUIForUser();
 }
 
 function googleLogin() {
-    alert('🔵 Google Login - Please use Email/Password or Signup!');
+    alert('🔵 Please use Email/Password or Signup!');
 }
 
 function logoutUser() {
     localStorage.removeItem('currentUser');
-    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('secretAdmin');
+    isAdminMode = false;
     currentUser = null;
+    let panel = document.getElementById('secretAdminPanel');
+    if (panel) panel.classList.remove('active');
     alert('✅ Logged out!');
-    window.location.reload();
+    location.reload();
 }
 
 function updateUIForUser() {
@@ -143,6 +190,79 @@ function updateUIForUser() {
     document.getElementById('authBtn').style.display = 'none';
     document.getElementById('logoutBtn').style.display = 'inline-block';
     document.getElementById('dashboardBtn').style.display = 'inline-block';
+}
+
+function goDashboard() {
+    window.location.href = 'dashboard.html';
+}
+
+// ============= SECRET ADMIN PANEL =============
+
+function showSecretAdminPanel() {
+    let panel = document.getElementById('secretAdminPanel');
+    if (!panel) {
+        const container = document.querySelector('.container');
+        const adminDiv = document.createElement('div');
+        adminDiv.id = 'secretAdminPanel';
+        adminDiv.innerHTML = `
+            <h3>🔐 ADMIN TOOLS</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+                <input type="text" id="adminCardType" placeholder="Type (visa/mastercard/rupay)">
+                <input type="text" id="adminCardName" placeholder="Card Name">
+                <input type="text" id="adminCardNumber" placeholder="Card Number">
+                <input type="text" id="adminCardExp" placeholder="EXP (MM/YY)">
+                <input type="text" id="adminCardCvv" placeholder="CVV">
+                <input type="text" id="adminCardBalance" placeholder="Balance">
+                <input type="number" id="adminCardPrice" placeholder="Price (₹)">
+                <select id="adminCardStatus">
+                    <option value="instock">IN STOCK</option>
+                    <option value="outstock">OUT OF STOCK</option>
+                    <option value="soldout">SOLD OUT</option>
+                </select>
+            </div>
+            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="adminAddCard()">➕ ADD CARD</button>
+                <button onclick="adminRefreshCards()">🔄 REFRESH</button>
+            </div>
+            <p style="color: #8888aa; font-size: 11px; margin-top: 10px;">⚡ Admin mode active</p>
+        `;
+        container.appendChild(adminDiv);
+        panel = adminDiv;
+    }
+    panel.classList.add('active');
+}
+
+// ============= ADMIN FUNCTIONS =============
+
+function adminAddCard() {
+    const type = document.getElementById('adminCardType').value;
+    const name = document.getElementById('adminCardName').value;
+    const number = document.getElementById('adminCardNumber').value;
+    const exp = document.getElementById('adminCardExp').value;
+    const cvv = document.getElementById('adminCardCvv').value;
+    const balance = document.getElementById('adminCardBalance').value;
+    const price = parseInt(document.getElementById('adminCardPrice').value) || 50;
+    const status = document.getElementById('adminCardStatus').value;
+    
+    if (!type || !name || !number || !exp || !cvv || !balance) {
+        alert('❌ Please fill all fields!');
+        return;
+    }
+    
+    allCards.push({ type, name, number, exp, cvv, balance, price, status });
+    localStorage.setItem('shopCards', JSON.stringify(allCards));
+    alert('✅ Card added successfully!');
+    renderCards('all');
+    document.getElementById('totalCards').textContent = allCards.length;
+    
+    ['adminCardType','adminCardName','adminCardNumber','adminCardExp','adminCardCvv','adminCardBalance','adminCardPrice']
+        .forEach(id => document.getElementById(id).value = '');
+}
+
+function adminRefreshCards() {
+    renderCards('all');
+    document.getElementById('totalCards').textContent = allCards.length;
+    alert('✅ Cards refreshed!');
 }
 
 // ============= CARDS =============
@@ -156,7 +276,9 @@ function renderCards(filter = 'all') {
         return;
     }
     
-    grid.innerHTML = filtered.map((card, index) => `
+    grid.innerHTML = filtered.map((card, index) => {
+        const realIndex = allCards.indexOf(card);
+        return `
         <div class="card-item">
             <div class="card-type">${card.type.toUpperCase()}</div>
             <div class="card-number">${card.number}</div>
@@ -167,16 +289,17 @@ function renderCards(filter = 'all') {
             <div class="card-balance">BAL: $${card.balance}</div>
             <div class="card-price">💰 ₹${card.price}</div>
             <div class="card-status status-${card.status}">${card.status.toUpperCase()}</div>
-            <button class="purchase-btn" onclick="openPurchase(${index})" ${card.status !== 'instock' ? 'disabled' : ''}>
+            <button class="purchase-btn" onclick="openPurchase(${realIndex})" ${card.status !== 'instock' ? 'disabled' : ''}>
                 ${card.status === 'instock' ? '🛒 PURCHASE' : '🔒 SOLD OUT'}
             </button>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function filterCards(type) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    let clickedBtn = event.target;
+    clickedBtn.classList.add('active');
     renderCards(type);
 }
 
@@ -195,7 +318,7 @@ function openPurchase(index) {
         return;
     }
     
-    selectedCardId = index;
+    selectedCardIndex = index;
     document.getElementById('purchaseAmount').textContent = card.price;
     document.getElementById('purchaseCardInfo').innerHTML = `
         <p><strong>Card:</strong> ${card.type.toUpperCase()} - ${card.number}</p>
@@ -216,18 +339,15 @@ function verifyPayment() {
     
     setTimeout(() => {
         try {
-            const card = allCards[selectedCardId];
+            const card = allCards[selectedCardIndex];
             if (!card) { alert('❌ Card not found!'); return; }
             
-            // Update card status
             card.status = 'soldout';
-            allCards[selectedCardId] = card;
+            allCards[selectedCardIndex] = card;
             localStorage.setItem('shopCards', JSON.stringify(allCards));
             
-            // Save to user purchases
             let purchases = JSON.parse(localStorage.getItem('purchases_' + currentUser.email) || '[]');
             purchases.push({
-                cardId: selectedCardId,
                 type: card.type,
                 number: card.number,
                 exp: card.exp,
@@ -245,28 +365,67 @@ function verifyPayment() {
             document.getElementById('totalCards').textContent = allCards.length;
             alert(`🔓 Card CVV: ${card.cvv}`);
             
+            document.getElementById('transactionId').value = '';
+            document.getElementById('screenshotUpload').value = '';
+            
         } catch (error) {
             alert('❌ Error: ' + error.message);
         }
     }, 2000);
 }
 
-// ============= ADMIN PANEL =============
+// ============= DYNAMIC STATS =============
 
-function showAdminPanel() {
-    if (document.getElementById('adminPanel')) return;
+let terminalCount = 6489;
+let trafficCount = 6384532;
+
+function updateStats() {
+    const change = Math.floor(Math.random() * 300) + 100;
+    terminalCount += Math.random() > 0.5 ? change : -change;
+    if (terminalCount < 100) terminalCount = 100;
+    if (terminalCount > 400) terminalCount = 400;
     
-    const container = document.querySelector('.container');
-    const adminDiv = document.createElement('div');
-    adminDiv.id = 'adminPanel';
-    adminDiv.style.cssText = `
-        margin-top: 20px;
-        padding: 20px;
-        background: rgba(0, 150, 255, 0.05);
-        border: 2px solid #ff6b6b;
-        border-radius: 15px;
-    `;
-    adminDiv.innerHTML = `
-        <h3 style="color: #ff6b6b;">🔐 ADMIN PANEL</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-            <input type="text" id="adminCardType" placeholder="Type (visa/mastercard/rupay)"
+    trafficCount += Math.floor(Math.random() * 4) + 3;
+    
+    document.getElementById('terminalUsers').textContent = terminalCount.toLocaleString();
+    document.getElementById('networkTraffic').textContent = trafficCount.toLocaleString();
+}
+
+// ============= CLOSE MODALS =============
+
+window.onclick = function(e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.style.display = 'none';
+    }
+};
+
+// ============= KEYBOARD SHORTCUT =============
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        if (isAdminMode) {
+            localStorage.removeItem('secretAdmin');
+            isAdminMode = false;
+            let panel = document.getElementById('secretAdminPanel');
+            if (panel) panel.classList.remove('active');
+            alert('🔒 Admin mode disabled');
+        } else {
+            if (currentUser) {
+                localStorage.setItem('secretAdmin', 'true');
+                isAdminMode = true;
+                showSecretAdminPanel();
+                alert('🔓 Admin mode enabled');
+            } else {
+                alert('⚠️ Please login first!');
+            }
+        }
+    }
+});
+
+// ============= INIT =============
+init();
+setInterval(updateStats, 2000);
+
+console.log('🚀 CYPHERPRO CC SHOP Loaded!');
+console.log('📊 Cards available:', allCards.length);
+console.log('🔐 Admin: chaudhary456light / lightspeedy');
+console.log('💡 Shortcut: Ctrl+Shift+A to toggle admin');
