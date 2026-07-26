@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Light CC Shop</title>
+    <title>Admin Panel - Cyphpro CC Shop</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .admin-container {
@@ -15,26 +15,40 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #00ff88;
+            border-bottom: 2px solid rgba(0, 150, 255, 0.3);
             padding-bottom: 15px;
             margin-bottom: 30px;
         }
         .admin-header h1 {
-            color: #00ff88;
+            background: linear-gradient(135deg, #0099ff, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .admin-header a {
-            color: #ff6b6b;
+            color: #66aaff;
             text-decoration: none;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .admin-header a:hover {
+            background: rgba(0, 150, 255, 0.1);
+            border-color: #0099ff;
         }
         .card-form {
-            background: rgba(0, 255, 136, 0.03);
-            border: 1px solid rgba(0, 255, 136, 0.2);
+            background: rgba(0, 150, 255, 0.03);
+            border: 1px solid rgba(0, 150, 255, 0.15);
             padding: 25px;
             border-radius: 8px;
             margin-bottom: 30px;
         }
         .card-form h2 {
-            color: #ffd93d;
+            background: linear-gradient(135deg, #00ccff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
         }
         .form-group {
@@ -44,33 +58,49 @@
         }
         .form-group input, .form-group select {
             padding: 10px;
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            color: #fff;
+            background: rgba(0, 150, 255, 0.05);
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            color: #ffffff;
             border-radius: 5px;
+            transition: all 0.3s;
         }
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #00ff88;
+            border-color: #0099ff;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.05);
+        }
+        .form-group input::placeholder {
+            color: #66aaff;
+            opacity: 0.5;
+        }
+        .form-group select option {
+            background: #0a0e1a;
         }
         .form-group.full {
             grid-column: 1 / -1;
         }
         .btn-add {
             padding: 12px 30px;
-            background: #00ff88;
-            color: #0a0a0f;
+            background: linear-gradient(135deg, #0099ff, #00ccff);
+            color: #ffffff;
             border: none;
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 15px;
+            transition: all 0.3s;
+            text-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
         }
         .btn-add:hover {
-            background: #00cc66;
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 150, 255, 0.2);
         }
         .card-list {
             margin-top: 30px;
+        }
+        .card-list h2 {
+            color: #66aaff;
+            margin-bottom: 15px;
         }
         .card-list table {
             width: 100%;
@@ -79,28 +109,52 @@
         .card-list th {
             text-align: left;
             padding: 12px;
-            border-bottom: 2px solid #00ff88;
-            color: #8888aa;
+            border-bottom: 2px solid rgba(0, 150, 255, 0.3);
+            color: #66aaff;
+            font-weight: bold;
         }
         .card-list td {
             padding: 12px;
-            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
-            color: #ddd;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.1);
+            color: #ffffff;
         }
         .card-list .delete-btn {
             color: #ff6b6b;
             cursor: pointer;
             text-decoration: none;
+            transition: all 0.3s;
         }
         .card-list .delete-btn:hover {
             text-decoration: underline;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+        .status-badge {
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-badge.instock {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        .status-badge.outstock {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        .status-badge.soldout {
+            background: rgba(255, 107, 107, 0.25);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
         }
     </style>
 </head>
 <body>
     <div class="admin-container">
         <div class="admin-header">
-            <h1>🔐 ADMIN PANEL</h1>
+            <h1>🔐 ADMIN PANEL - CYPH<strong style="color: #00ff88;">PRO</strong></h1>
             <a href="index.html">← Back to Shop</a>
         </div>
         
@@ -131,7 +185,7 @@
         
         <!-- Card List -->
         <div class="card-list">
-            <h2 style="color: #ffd93d; margin-bottom: 15px;">📋 MANAGED CARDS</h2>
+            <h2>📋 MANAGED CARDS</h2>
             <table id="cardTable">
                 <thead>
                     <tr>
@@ -207,13 +261,13 @@
             const tbody = document.getElementById('cardTableBody');
             tbody.innerHTML = cards.map((card, index) => `
                 <tr>
-                    <td>${card.type.toUpperCase()}</td>
+                    <td style="color: #0099ff; font-weight: bold;">${card.type.toUpperCase()}</td>
                     <td>${card.name}</td>
-                    <td>${card.number}</td>
+                    <td style="color: #66aaff;">${card.number}</td>
                     <td>${card.exp}</td>
                     <td>${card.cvv}</td>
-                    <td>${card.balance}</td>
-                    <td style="color: ${card.status === 'instock' ? '#00ff88' : '#ff6b6b'}">${card.status.toUpperCase()}</td>
+                    <td style="color: #00ff88;">${card.balance}</td>
+                    <td><span class="status-badge ${card.status}">${card.status.toUpperCase()}</span></td>
                     <td><a href="#" class="delete-btn" onclick="deleteCard(${index})">Delete</a></td>
                 </tr>
             `).join('');
