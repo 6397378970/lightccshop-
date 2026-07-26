@@ -6,8 +6,8 @@
 }
 
 body {
-    background: #0a0a0f;
-    color: #00ff88;
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1a3e 50%, #0a0e1a 100%);
+    color: #ffffff;
     min-height: 100vh;
     padding: 20px;
 }
@@ -15,11 +15,12 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    background: rgba(10, 10, 20, 0.95);
-    border: 1px solid #00ff88;
+    background: rgba(10, 14, 30, 0.92);
+    border: 1px solid rgba(0, 150, 255, 0.3);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+    box-shadow: 0 0 40px rgba(0, 150, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 /* Header */
@@ -27,7 +28,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #00ff88;
+    border-bottom: 2px solid rgba(0, 150, 255, 0.3);
     padding-bottom: 15px;
     margin-bottom: 15px;
     flex-wrap: wrap;
@@ -41,15 +42,23 @@ body {
 }
 
 .main-title {
-    font-size: 28px;
-    color: #00ff88;
-    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-    letter-spacing: 3px;
+    font-size: 32px;
+    background: linear-gradient(135deg, #0099ff 0%, #00ccff 50%, #00ff88 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(0, 150, 255, 0.2);
+    letter-spacing: 4px;
+    font-weight: 900;
 }
 
 .uid {
-    color: #8888aa;
+    color: #66aaff;
     font-size: 14px;
+    background: rgba(0, 150, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 150, 255, 0.2);
 }
 
 .secure {
@@ -58,6 +67,7 @@ body {
     background: rgba(255, 107, 107, 0.1);
     padding: 4px 10px;
     border-radius: 4px;
+    border: 1px solid rgba(255, 107, 107, 0.2);
 }
 
 .account-section {
@@ -77,45 +87,52 @@ body {
 }
 
 .account-btn {
-    color: #00ff88;
-    border: 1px solid #00ff88;
+    color: #0099ff;
+    border: 1px solid #0099ff;
+    background: rgba(0, 150, 255, 0.05);
 }
 
 .account-btn:hover {
-    background: #00ff88;
-    color: #0a0a0f;
+    background: #0099ff;
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
 }
 
 .telegram-btn {
-    color: #0088cc;
-    border: 1px solid #0088cc;
+    color: #00ccff;
+    border: 1px solid #00ccff;
+    background: rgba(0, 204, 255, 0.05);
 }
 
 .telegram-btn:hover {
-    background: #0088cc;
-    color: #fff;
+    background: #00ccff;
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 204, 255, 0.3);
 }
 
 .support-btn {
     color: #ff69b4;
     border: 1px solid #ff69b4;
+    background: rgba(255, 105, 180, 0.05);
 }
 
 .support-btn:hover {
     background: #ff69b4;
-    color: #fff;
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
 }
 
 /* Node Info */
 .node-info {
     display: flex;
     gap: 20px;
-    background: rgba(0, 255, 136, 0.05);
+    background: rgba(0, 150, 255, 0.05);
     padding: 10px 15px;
     border-radius: 5px;
     margin-bottom: 20px;
     font-size: 14px;
     flex-wrap: wrap;
+    border: 1px solid rgba(0, 150, 255, 0.1);
 }
 
 .vx {
@@ -124,11 +141,11 @@ body {
 }
 
 .node {
-    color: #ffd93d;
+    color: #00ccff;
 }
 
 .unverified {
-    color: #ff6b6b;
+    color: #ffaa00;
 }
 
 /* Filters */
@@ -142,8 +159,8 @@ body {
 .filter-btn {
     padding: 8px 25px;
     background: transparent;
-    border: 1px solid #00ff88;
-    color: #00ff88;
+    border: 1px solid #0099ff;
+    color: #66aaff;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s;
@@ -151,12 +168,15 @@ body {
 }
 
 .filter-btn:hover {
-    background: rgba(0, 255, 136, 0.1);
+    background: rgba(0, 150, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.1);
 }
 
 .filter-btn.active {
-    background: #00ff88;
-    color: #0a0a0f;
+    background: linear-gradient(135deg, #0099ff, #00ccff);
+    color: #ffffff;
+    border-color: #00ccff;
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.2);
 }
 
 /* Stats */
@@ -168,26 +188,36 @@ body {
 }
 
 .stat-box {
-    background: rgba(0, 255, 136, 0.05);
+    background: rgba(0, 150, 255, 0.05);
     padding: 12px 25px;
     border-radius: 5px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
+    border: 1px solid rgba(0, 150, 255, 0.15);
     flex: 1;
     min-width: 200px;
+    transition: all 0.3s;
+}
+
+.stat-box:hover {
+    border-color: #0099ff;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.05);
 }
 
 .stat-label {
     display: block;
     font-size: 12px;
-    color: #8888aa;
+    color: #66aaff;
     margin-bottom: 5px;
+    letter-spacing: 1px;
 }
 
 .stat-value {
     font-size: 28px;
     font-weight: bold;
-    color: #00ff88;
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+    background: linear-gradient(135deg, #0099ff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(0, 150, 255, 0.1);
 }
 
 /* Cards Grid */
@@ -199,24 +229,29 @@ body {
 }
 
 .card-item {
-    background: rgba(0, 255, 136, 0.03);
-    border: 1px solid rgba(0, 255, 136, 0.15);
+    background: rgba(0, 150, 255, 0.03);
+    border: 1px solid rgba(0, 150, 255, 0.1);
     border-radius: 8px;
     padding: 18px;
     transition: all 0.3s;
     position: relative;
+    backdrop-filter: blur(5px);
 }
 
 .card-item:hover {
-    border-color: #00ff88;
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.05);
-    transform: translateY(-2px);
+    border-color: #0099ff;
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.08);
+    transform: translateY(-3px);
+    background: rgba(0, 150, 255, 0.05);
 }
 
 .card-type {
     font-size: 20px;
     font-weight: bold;
-    color: #ffd93d;
+    background: linear-gradient(135deg, #0099ff, #00ccff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 10px;
 }
 
@@ -225,20 +260,24 @@ body {
     letter-spacing: 2px;
     color: #ffffff;
     margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(0, 150, 255, 0.1);
 }
 
 .card-details {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    color: #8888aa;
+    color: #66aaff;
 }
 
 .card-balance {
-    color: #00ff88;
-    font-weight: bold;
     margin-top: 10px;
     font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #00ff88, #00ccff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .card-status {
@@ -248,21 +287,25 @@ body {
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 3px;
+    font-weight: bold;
 }
 
 .status-instock {
     background: rgba(0, 255, 136, 0.15);
     color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
 .status-outstock {
     background: rgba(255, 107, 107, 0.15);
     color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3);
 }
 
 .status-soldout {
     background: rgba(255, 107, 107, 0.25);
     color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3);
 }
 
 /* Modal */
@@ -273,24 +316,29 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(5px);
 }
 
 .modal-content {
-    background: #1a1a2e;
+    background: linear-gradient(135deg, #0a0e1a, #1a1a3e);
     padding: 40px;
     border-radius: 10px;
-    border: 1px solid #00ff88;
+    border: 1px solid rgba(0, 150, 255, 0.3);
     max-width: 400px;
     width: 90%;
     position: relative;
+    box-shadow: 0 0 60px rgba(0, 150, 255, 0.1);
 }
 
 .modal-content h2 {
-    color: #00ff88;
+    background: linear-gradient(135deg, #0099ff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 25px;
     text-align: center;
 }
@@ -299,34 +347,37 @@ body {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
-    background: rgba(0, 255, 136, 0.05);
-    border: 1px solid rgba(0, 255, 136, 0.2);
+    background: rgba(0, 150, 255, 0.05);
+    border: 1px solid rgba(0, 150, 255, 0.2);
     color: #ffffff;
     border-radius: 5px;
     font-size: 14px;
+    transition: all 0.3s;
 }
 
 .modal-content input:focus {
     outline: none;
-    border-color: #00ff88;
+    border-color: #0099ff;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.1);
 }
 
 .modal-content button {
     width: 100%;
     padding: 12px;
-    background: #00ff88;
-    color: #0a0a0f;
+    background: linear-gradient(135deg, #0099ff, #00ccff);
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s;
+    text-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
 }
 
 .modal-content button:hover {
-    background: #00cc66;
     transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.3);
 }
 
 .close {
@@ -334,12 +385,14 @@ body {
     top: 15px;
     right: 20px;
     font-size: 28px;
-    color: #8888aa;
+    color: #66aaff;
     cursor: pointer;
+    transition: all 0.3s;
 }
 
 .close:hover {
     color: #ff6b6b;
+    transform: rotate(90deg);
 }
 
 /* Responsive */
@@ -351,7 +404,7 @@ body {
     }
     
     .main-title {
-        font-size: 22px;
+        font-size: 24px;
     }
     
     .account-section {
