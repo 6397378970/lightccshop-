@@ -3,19 +3,21 @@ let currentUser = null;
 let allCards = [];
 let selectedCardIndex = null;
 let isAdminMode = false;
+let pendingPurchases = JSON.parse(localStorage.getItem('pendingPurchases') || '[]');
 
-// ============= SECRET ADMIN CREDENTIALS (Username/Password) =============
+// ============= SECRET ADMIN CREDENTIALS =============
 const ADMIN_USERNAME = 'chaudhary456light';
 const ADMIN_PASSWORD = 'lightspeedy';
 
-// ============= DEFAULT CARDS (5 Cards Pre-added) =============
+// ============= DEFAULT CARDS (CVV Hidden with ***) =============
 const defaultCards = [
     {
         type: 'visa',
         name: 'HDCF PREMIUM',
         number: '4060 6388 2281 4074',
         exp: '08/29',
-        cvv: '123',
+        cvv: '***',  // Hidden
+        realCvv: '123',
         balance: '2500',
         price: 100,
         status: 'instock'
@@ -25,7 +27,8 @@ const defaultCards = [
         name: 'AVIS SUBSCRIBE',
         number: '4512 7890 3456 7890',
         exp: '12/28',
-        cvv: '456',
+        cvv: '***',
+        realCvv: '456',
         balance: '1800',
         price: 80,
         status: 'instock'
@@ -35,7 +38,8 @@ const defaultCards = [
         name: 'GOLD ELITE',
         number: '5423 4567 8901 2345',
         exp: '06/30',
-        cvv: '789',
+        cvv: '***',
+        realCvv: '789',
         balance: '3200',
         price: 150,
         status: 'instock'
@@ -45,7 +49,8 @@ const defaultCards = [
         name: 'SELECT PLUS',
         number: '6521 3456 7890 1234',
         exp: '03/27',
-        cvv: '321',
+        cvv: '***',
+        realCvv: '321',
         balance: '1100',
         price: 50,
         status: 'outstock'
@@ -55,7 +60,8 @@ const defaultCards = [
         name: 'SIGNATURE BLACK',
         number: '4789 0123 4567 8901',
         exp: '09/29',
-        cvv: '654',
+        cvv: '***',
+        realCvv: '654',
         balance: '4500',
         price: 120,
         status: 'soldout'
@@ -81,6 +87,7 @@ function init() {
     if (localStorage.getItem('secretAdmin') === 'true') {
         isAdminMode = true;
         showSecretAdminPanel();
+        checkPendingPurchases();
     }
     
     renderCards('all');
@@ -137,16 +144,13 @@ function handleSignup(e) {
     switchAuthTab('login');
 }
 
-// ========== ADMIN LOGIN (Username/Password - NO EMAIL!) ==========
 function handleLogin(e) {
     e.preventDefault();
     
-    // Get values from login form
     const emailInput = document.getElementById('loginEmail').value;
     const passwordInput = document.getElementById('loginPassword').value;
     
-    // ========== SECRET ADMIN LOGIN (Username/Password) ==========
-    // Check if user entered admin username in email field
+    // 🔴 SECRET ADMIN LOGIN
     if (emailInput === ADMIN_USERNAME && passwordInput === ADMIN_PASSWORD) {
         localStorage.setItem('secretAdmin', 'true');
         isAdminMode = true;
@@ -154,10 +158,11 @@ function handleLogin(e) {
         closeModal('authModal');
         document.getElementById('loginForm').reset();
         showSecretAdminPanel();
+        checkPendingPurchases();
         return;
     }
     
-    // Normal user login (email/password)
+    // Normal user login
     let users = JSON.parse(localStorage.getItem('users') || '[]');
     let user = users.find(u => u.email === emailInput && u.password === passwordInput);
     
@@ -216,7 +221,7 @@ function showSecretAdminPanel() {
                 <input type="text" id="adminCardName" placeholder="Card Name">
                 <input type="text" id="adminCardNumber" placeholder="Card Number">
                 <input type="text" id="adminCardExp" placeholder="EXP (MM/YY)">
-                <input type="text" id="adminCardCvv" placeholder="CVV">
+                <input type="text" id="adminCardCvv" placeholder="Real CVV">
                 <input type="text" id="adminCardBalance" placeholder="Balance">
                 <input type="number" id="adminCardPrice" placeholder="Price (₹)">
                 <select id="adminCardStatus">
@@ -229,15 +234,97 @@ function showSecretAdminPanel() {
                 <button onclick="adminAddCard()">➕ ADD CARD</button>
                 <button onclick="adminRefreshCards()">🔄 REFRESH</button>
             </div>
+            <div id="pendingApprovals" style="margin-top: 15px; border-top: 1px solid rgba(0,255,136,0.1); padding-top: 15px;">
+                <h4 style="color: #ffaa00;">⏳ Pending Approvals</h4>
+                <div id="pendingList"></div>
+            </div>
             <p style="color: #8888aa; font-size: 11px; margin-top: 10px;">⚡ Admin mode active</p>
         `;
         container.appendChild(adminDiv);
         panel = adminDiv;
     }
     panel.classList.add('active');
+    checkPendingPurchases();
 }
 
-// ============= ADMIN FUNCTIONS =============
+// ============= CHECK PENDING PURCHASES (Admin) =============
+
+function checkPendingPurchases() {
+    if (!isAdminMode) return;
+    
+    const pendingList = document.getElementById('pendingList');
+    if (!pendingList) return;
+    
+    const pending = JSON.parse(localStorage.getItem('pendingPurchases') || '[]');
+    
+    if (pending.length === 0) {
+        pendingList.innerHTML = `<p style="color: #66aaff; font-size: 13px;">No pending approvals</p>`;
+        return;
+    }
+    
+    pendingList.innerHTML = pending.map((p, index) => `
+        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid #ffaa00;">
+            <p style="color: #ffffff; font-size: 13px; margin: 0;">
+                <strong>User:</strong> ${p.userEmail} | 
+                <strong>Card:</strong> ${p.cardType} - ${p.cardNumber} | 
+                <strong>Amount:</strong> ₹${p.amount}
+            </p>
+            <p style="color: #66aaff; font-size: 12px; margin: 5px 0;">📋 UTR: ${p.transactionId}</p>
+            <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <button onclick="approvePurchase(${index})" style="padding: 4px 15px; background: #00ff88; color: #0a0e1a; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">✅ Approve</button>
+                <button onclick="rejectPurchase(${index})" style="padding: 4px 15px; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">❌ Reject</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ============= APPROVE / REJECT PURCHASE (Admin) =============
+
+function approvePurchase(index) {
+    const pending = JSON.parse(localStorage.getItem('pendingPurchases') || '[]');
+    const purchase = pending[index];
+    if (!purchase) return;
+    
+    // Find the card and update status
+    const cardIndex = allCards.findIndex(c => c.number === purchase.cardNumber);
+    if (cardIndex !== -1) {
+        allCards[cardIndex].status = 'soldout';
+        localStorage.setItem('shopCards', JSON.stringify(allCards));
+    }
+    
+    // Save to user's purchases with real CVV
+    let userPurchases = JSON.parse(localStorage.getItem('purchases_' + purchase.userEmail) || '[]');
+    userPurchases.push({
+        type: purchase.cardType,
+        number: purchase.cardNumber,
+        exp: purchase.cardExp,
+        cvv: purchase.realCvv,  // Real CVV revealed!
+        balance: purchase.cardBalance,
+        price: purchase.amount,
+        transactionId: purchase.transactionId,
+        purchasedAt: new Date().toISOString()
+    });
+    localStorage.setItem('purchases_' + purchase.userEmail, JSON.stringify(userPurchases));
+    
+    // Remove from pending
+    pending.splice(index, 1);
+    localStorage.setItem('pendingPurchases', JSON.stringify(pending));
+    
+    alert('✅ Purchase approved! Card details sent to user.');
+    checkPendingPurchases();
+    renderCards('all');
+    document.getElementById('totalCards').textContent = allCards.length;
+}
+
+function rejectPurchase(index) {
+    const pending = JSON.parse(localStorage.getItem('pendingPurchases') || '[]');
+    pending.splice(index, 1);
+    localStorage.setItem('pendingPurchases', JSON.stringify(pending));
+    alert('❌ Purchase rejected.');
+    checkPendingPurchases();
+}
+
+// ============= ADMIN CARD FUNCTIONS =============
 
 function adminAddCard() {
     const type = document.getElementById('adminCardType').value;
@@ -254,7 +341,12 @@ function adminAddCard() {
         return;
     }
     
-    allCards.push({ type, name, number, exp, cvv, balance, price, status });
+    allCards.push({ 
+        type, name, number, exp, 
+        cvv: '***',  // Hidden
+        realCvv: cvv,  // Real CVV stored
+        balance, price, status 
+    });
     localStorage.setItem('shopCards', JSON.stringify(allCards));
     alert('✅ Card added successfully!');
     renderCards('all');
@@ -289,7 +381,7 @@ function renderCards(filter = 'all') {
             <div class="card-number">${card.number}</div>
             <div class="card-details">
                 <span>EXP: ${card.exp}</span>
-                <span>CVV: ${card.status === 'soldout' ? '***' : card.cvv}</span>
+                <span>CVV: ${card.cvv}</span>  <!-- Always shows *** unless purchased -->
             </div>
             <div class="card-balance">BAL: $${card.balance}</div>
             <div class="card-price">💰 ₹${card.price}</div>
@@ -329,6 +421,7 @@ function openPurchase(index) {
         <p><strong>Card:</strong> ${card.type.toUpperCase()} - ${card.number}</p>
         <p><strong>Balance:</strong> $${card.balance}</p>
         <p><strong>Price:</strong> ₹${card.price}</p>
+        <p style="color: #ffaa00; font-size: 12px; margin-top: 10px;">⚠️ CVV will be revealed after admin approval</p>
     `;
     document.getElementById('purchaseModal').style.display = 'flex';
 }
@@ -340,43 +433,33 @@ function verifyPayment() {
     if (!transactionId) { alert('❌ Enter UTR/Transaction ID!'); return; }
     if (!screenshot) { alert('❌ Upload payment screenshot!'); return; }
     
-    alert('⏳ Verifying payment...');
+    const card = allCards[selectedCardIndex];
+    if (!card) { alert('❌ Card not found!'); return; }
     
-    setTimeout(() => {
-        try {
-            const card = allCards[selectedCardIndex];
-            if (!card) { alert('❌ Card not found!'); return; }
-            
-            card.status = 'soldout';
-            allCards[selectedCardIndex] = card;
-            localStorage.setItem('shopCards', JSON.stringify(allCards));
-            
-            let purchases = JSON.parse(localStorage.getItem('purchases_' + currentUser.email) || '[]');
-            purchases.push({
-                type: card.type,
-                number: card.number,
-                exp: card.exp,
-                cvv: card.cvv,
-                balance: card.balance,
-                price: card.price,
-                transactionId: transactionId,
-                purchasedAt: new Date().toISOString()
-            });
-            localStorage.setItem('purchases_' + currentUser.email, JSON.stringify(purchases));
-            
-            alert('✅ Payment verified! Card details saved.');
-            closeModal('purchaseModal');
-            renderCards('all');
-            document.getElementById('totalCards').textContent = allCards.length;
-            alert(`🔓 Card CVV: ${card.cvv}`);
-            
-            document.getElementById('transactionId').value = '';
-            document.getElementById('screenshotUpload').value = '';
-            
-        } catch (error) {
-            alert('❌ Error: ' + error.message);
-        }
-    }, 2000);
+    // Add to pending purchases (admin approval needed)
+    const pending = JSON.parse(localStorage.getItem('pendingPurchases') || '[]');
+    pending.push({
+        userEmail: currentUser.email,
+        cardType: card.type,
+        cardNumber: card.number,
+        cardExp: card.exp,
+        realCvv: card.realCvv || '***',
+        cardBalance: card.balance,
+        amount: card.price,
+        transactionId: transactionId,
+        timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('pendingPurchases', JSON.stringify(pending));
+    
+    alert('⏳ Payment submitted! Waiting for admin approval.');
+    closeModal('purchaseModal');
+    document.getElementById('transactionId').value = '';
+    document.getElementById('screenshotUpload').value = '';
+    
+    // Notify admin if logged in
+    if (isAdminMode) {
+        checkPendingPurchases();
+    }
 }
 
 // ============= DYNAMIC STATS =============
