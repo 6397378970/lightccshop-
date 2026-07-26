@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyphpro CC Shop</title>
+    <title>CYPHERPRO CC SHOP</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- 3D Particle Background -->
+        <div id="particles-3d"></div>
+
         <!-- Header -->
         <div class="header">
             <div class="logo-section">
-                <h1 class="main-title">CYPH<strong style="color: #00ff88;">PRO</strong></h1>
+                <h1 class="main-title">CYPHER<span style="color: #00ff88;">PRO</span> <span style="color: #0099ff; font-size: 14px;">CC SHOP</span></h1>
                 <span class="uid">UID-656254</span>
                 <span class="secure">🔒 SECURE ACCOUNT</span>
             </div>
             <div class="account-section">
-                <a href="#" class="account-btn" onclick="toggleLogin()">👤 ACCOUNT</a>
+                <a href="#" class="login-btn" onclick="showAuthModal('login')">🔐 LOGIN</a>
                 <a href="#" class="telegram-btn" onclick="joinTelegram()">💬 JOIN TELEGRAM</a>
                 <a href="#" class="support-btn" onclick="contactSupport()">🩷 SUPPORT</a>
             </div>
@@ -27,6 +34,7 @@
             <span class="vx">VX</span>
             <span class="node">NODE: GLOBAL-01</span>
             <span class="unverified">⚠ UNVERIFIED REGISTRY</span>
+            <span class="online-users" id="onlineUsers">👤 142 Online</span>
         </div>
 
         <!-- Filter Tabs -->
@@ -41,11 +49,15 @@
         <div class="stats">
             <div class="stat-box">
                 <span class="stat-label">TERMINAL USERS</span>
-                <span class="stat-value" id="terminalUsers">6489</span>
+                <span class="stat-value" id="terminalUsers">6,489</span>
             </div>
             <div class="stat-box">
                 <span class="stat-label">3D0 NETWORK TRAFFIC</span>
                 <span class="stat-value" id="networkTraffic">6,384,532</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">TOTAL CARDS</span>
+                <span class="stat-value" id="totalCards">0</span>
             </div>
         </div>
 
@@ -54,20 +66,66 @@
             <!-- Cards will be dynamically loaded -->
         </div>
 
-        <!-- Login Modal -->
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>🔐 ADMIN LOGIN</h2>
-                <form id="loginForm" onsubmit="handleLogin(event)">
-                    <input type="text" id="username" placeholder="Username" value="chaudhary456light">
-                    <input type="password" id="password" placeholder="Password" value="lightspeedy">
+        <!-- Auth Modal (Login/Signup) -->
+        <div id="authModal" class="modal">
+            <div class="modal-content auth-modal">
+                <span class="close" onclick="closeModal('authModal')">&times;</span>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">LOGIN</button>
+                    <button class="auth-tab" onclick="switchAuthTab('signup')">SIGN UP</button>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" onsubmit="handleLogin(event)" class="auth-form active">
+                    <h2>🔐 WELCOME BACK</h2>
+                    <input type="email" id="loginEmail" placeholder="Email Address" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
                     <button type="submit">LOGIN</button>
+                    <div class="auth-divider">OR</div>
+                    <button type="button" onclick="googleLogin()" class="google-btn">🔵 Continue with Google</button>
                 </form>
+
+                <!-- Signup Form -->
+                <form id="signupForm" onsubmit="handleSignup(event)" class="auth-form">
+                    <h2>📝 CREATE ACCOUNT</h2>
+                    <input type="text" id="signupName" placeholder="Full Name" required>
+                    <input type="email" id="signupEmail" placeholder="Email Address" required>
+                    <input type="tel" id="signupPhone" placeholder="Phone Number" required>
+                    <input type="password" id="signupPassword" placeholder="Password (min 6 chars)" required>
+                    <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
+                    <button type="submit">SIGN UP</button>
+                    <div class="auth-divider">OR</div>
+                    <button type="button" onclick="googleLogin()" class="google-btn">🔵 Continue with Google</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Purchase Modal -->
+        <div id="purchaseModal" class="modal">
+            <div class="modal-content purchase-modal">
+                <span class="close" onclick="closeModal('purchaseModal')">&times;</span>
+                <h2>💰 PURCHASE CARD</h2>
+                <div id="purchaseCardInfo"></div>
+                
+                <!-- PhonePe QR -->
+                <div class="qr-section">
+                    <img src="phonepe-qr.jpg" alt="PhonePe QR" class="qr-code">
+                    <p class="qr-label">📱 Scan & Pay via PhonePe</p>
+                    <p class="qr-amount">Amount: ₹<span id="purchaseAmount">0</span></p>
+                </div>
+
+                <!-- Payment Verification -->
+                <div class="payment-verify">
+                    <h3>📸 Verify Payment</h3>
+                    <input type="file" id="screenshotUpload" accept="image/*" required>
+                    <input type="text" id="transactionId" placeholder="UTR / Transaction ID" required>
+                    <button onclick="verifyPayment()">✅ VERIFY PAYMENT</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
