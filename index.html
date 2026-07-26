@@ -7,6 +7,33 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 3D Particle Background -->
+    <div id="particles-3d">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="glow-orb"></div>
+        <div class="glow-orb"></div>
+        <div class="glow-orb"></div>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -21,7 +48,7 @@
                 <a href="#" class="login-btn" id="logoutBtn" style="display:none;" onclick="logoutUser()">🚪 LOGOUT</a>
                 <a href="#" class="telegram-btn" onclick="window.open('https://t.me/vouches_light')">💬 JOIN TELEGRAM</a>
                 <a href="#" class="support-btn" onclick="window.open('https://t.me/light_speedy')">🩷 SUPPORT</a>
-                <a href="#" class="support-btn" id="dashboardBtn" style="display:none; border-color: #00ff88; color: #00ff88;" onclick="window.location.href='dashboard.html'">📊 DASHBOARD</a>
+                <a href="#" class="support-btn" id="dashboardBtn" style="display:none; border-color: #00ff88; color: #00ff88;" onclick="goDashboard()">📊 DASHBOARD</a>
             </div>
         </div>
 
@@ -35,10 +62,10 @@
 
         <!-- Filters -->
         <div class="filters">
-            <button class="filter-btn active" onclick="filterCards('all')">ALL</button>
-            <button class="filter-btn" onclick="filterCards('visa')">VISA</button>
-            <button class="filter-btn" onclick="filterCards('mastercard')">MASTERCARD</button>
-            <button class="filter-btn" onclick="filterCards('rupay')">RUPAY</button>
+            <button class="filter-btn active" data-filter="all" onclick="filterCards('all')">ALL</button>
+            <button class="filter-btn" data-filter="visa" onclick="filterCards('visa')">VISA</button>
+            <button class="filter-btn" data-filter="mastercard" onclick="filterCards('mastercard')">MASTERCARD</button>
+            <button class="filter-btn" data-filter="rupay" onclick="filterCards('rupay')">RUPAY</button>
         </div>
 
         <!-- Stats -->
@@ -100,8 +127,8 @@
                 <div id="purchaseCardInfo"></div>
                 
                 <div class="qr-section">
-                    <img src="phonepe-qr.jpg" alt="PhonePe QR" class="qr-code">
-                    <p class="qr-label">📱 Scan & Pay via PhonePe</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=yourupi@upi" alt="PhonePe QR" class="qr-code">
+                    <p class="qr-label">📱 Scan & Pay via PhonePe/GPay</p>
                     <p class="qr-amount">Amount: ₹<span id="purchaseAmount">0</span></p>
                 </div>
 
