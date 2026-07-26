@@ -55,7 +55,7 @@ function renderCards(filter = 'all') {
     const filtered = filter === 'all' ? cards : cards.filter(c => c.type === filter);
     
     if (filtered.length === 0) {
-        grid.innerHTML = `<p style="color: #8888aa; text-align: center; grid-column: 1/-1; padding: 40px;">No cards available</p>`;
+        grid.innerHTML = `<p style="color: #66aaff; text-align: center; grid-column: 1/-1; padding: 40px;">No cards available</p>`;
         return;
     }
     
@@ -121,13 +121,11 @@ let terminalCount = 6489;
 let trafficCount = 6384532;
 
 function updateStats() {
-    // Terminal users fluctuate between 100-400
     const change = Math.floor(Math.random() * 300) + 100;
     terminalCount += Math.random() > 0.5 ? change : -change;
     if (terminalCount < 100) terminalCount = 100;
     if (terminalCount > 400) terminalCount = 400;
     
-    // Traffic increases by 3-4
     trafficCount += Math.floor(Math.random() * 2) + 3;
     
     document.getElementById('terminalUsers').textContent = terminalCount;
@@ -136,8 +134,6 @@ function updateStats() {
 
 // Initialize
 renderCards();
-
-// Update stats every 2 seconds
 setInterval(updateStats, 2000);
 
 // Close modal on outside click
