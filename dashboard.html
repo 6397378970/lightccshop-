@@ -163,7 +163,6 @@
     </div>
 
     <script>
-        // ============= CHECK LOGIN =============
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser) {
             window.location.href = 'index.html';
@@ -171,7 +170,6 @@
 
         document.getElementById('userNameDisplay').textContent = '👤 ' + (currentUser.name || currentUser.email);
 
-        // ============= LOAD PURCHASES =============
         function loadPurchases() {
             const purchases = JSON.parse(localStorage.getItem('purchases_' + currentUser.email) || '[]');
             const grid = document.getElementById('purchasedCardsGrid');
@@ -195,7 +193,7 @@
                 return;
             }
 
-            grid.innerHTML = purchases.map((purchase, index) => `
+            grid.innerHTML = purchases.map((purchase) => `
                 <div class="purchased-card">
                     <div class="card-type">${(purchase.type || 'card').toUpperCase()}</div>
                     <div class="card-number">${purchase.number || '****'}</div>
@@ -213,14 +211,12 @@
             `).join('');
         }
 
-        // ============= LOGOUT =============
         function logoutUser() {
             localStorage.removeItem('currentUser');
-            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('secretAdmin');
             window.location.href = 'index.html';
         }
 
-        // ============= INIT =============
         loadPurchases();
     </script>
 </body>
