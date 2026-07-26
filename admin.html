@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Light CC Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .admin-header h1 {
+            color: #00ff88;
+        }
+        .admin-header a {
+            color: #ff6b6b;
+            text-decoration: none;
+        }
+        .card-form {
+            background: rgba(0, 255, 136, 0.03);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .card-form h2 {
+            color: #ffd93d;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-group input, .form-group select {
+            padding: 10px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            color: #fff;
+            border-radius: 5px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        .btn-add {
+            padding: 12px 30px;
+            background: #00ff88;
+            color: #0a0a0f;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .btn-add:hover {
+            background: #00cc66;
+        }
+        .card-list {
+            margin-top: 30px;
+        }
+        .card-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .card-list th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #00ff88;
+            color: #8888aa;
+        }
+        .card-list td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            color: #ddd;
+        }
+        .card-list .delete-btn {
+            color: #ff6b6b;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .card-list .delete-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>🔐 ADMIN PANEL</h1>
+            <a href="index.html">← Back to Shop</a>
+        </div>
+        
+        <!-- Add Card Form -->
+        <div class="card-form">
+            <h2>➕ ADD NEW CARD</h2>
+            <form id="addCardForm" onsubmit="addCard(event)">
+                <div class="form-group">
+                    <select id="cardType" required>
+                        <option value="visa">VISA</option>
+                        <option value="mastercard">MASTERCARD</option>
+                        <option value="rupay">RUPAY</option>
+                    </select>
+                    <input type="text" id="cardName" placeholder="Card Name (e.g., HDCF PREMIUM)" required>
+                    <input type="text" id="cardNumber" placeholder="Card Number (e.g., 4060 6388 2281 4074)" required>
+                    <input type="text" id="cardExp" placeholder="EXP (e.g., 08/29)" required>
+                    <input type="text" id="cardCvv" placeholder="CVV (e.g., 123)" required>
+                    <input type="text" id="cardBalance" placeholder="Balance (e.g., ¥2,500)" required>
+                    <select id="cardStatus" required>
+                        <option value="instock">IN STOCK</option>
+                        <option value="outstock">OUT OF STOCK</option>
+                        <option value="soldout">SOLD OUT</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-add">➕ ADD CARD</button>
+            </form>
+        </div>
+        
+        <!-- Card List -->
+        <div class="card-list">
+            <h2 style="color: #ffd93d; margin-bottom: 15px;">📋 MANAGED CARDS</h2>
+            <table id="cardTable">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Number</th>
+                        <th>EXP</th>
+                        <th>CVV</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="cardTableBody">
+                    <!-- Cards loaded from localStorage -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // Load cards from localStorage or use default
+        let cards = JSON.parse(localStorage.getItem('shopCards')) || [
+            {
+                type: 'visa',
+                name: 'HDCF PREMIUM',
+                number: '4060 6388 2281 4074',
+                exp: '08/29',
+                cvv: '***',
+                balance: '¥2,500',
+                status: 'instock'
+            },
+            {
+                type: 'visa',
+                name: 'AVIS SUBSCRIBE',
+                number: '4512 7890 3456 7890',
+                exp: '12/28',
+                cvv: '***',
+                balance: '¥1,800',
+                status: 'instock'
+            },
+            {
+                type: 'mastercard',
+                name: 'GOLD ELITE',
+                number: '5423 4567 8901 2345',
+                exp: '06/30',
+                cvv: '***',
+                balance: '¥3,200',
+                status: 'instock'
+            },
+            {
+                type: 'rupay',
+                name: 'SELECT PLUS',
+                number: '6521 3456 7890 1234',
+                exp: '03/27',
+                cvv: '***',
+                balance: '¥1,100',
+                status: 'outstock'
+            },
+            {
+                type: 'visa',
+                name: 'SIGNATURE BLACK',
+                number: '4789 0123 4567 8901',
+                exp: '09/29',
+                cvv: '***',
+                balance: '¥4,500',
+                status: 'soldout'
+            }
+        ];
+        
+        // Render table
+        function renderTable() {
+            const tbody = document.getElementById('cardTableBody');
+            tbody.innerHTML = cards.map((card, index) => `
+                <tr>
+                    <td>${card.type.toUpperCase()}</td>
+                    <td>${card.name}</td>
+                    <td>${card.number}</td>
+                    <td>${card.exp}</td>
+                    <td>${card.cvv}</td>
+                    <td>${card.balance}</td>
+                    <td style="color: ${card.status === 'instock' ? '#00ff88' : '#ff6b6b'}">${card.status.toUpperCase()}</td>
+                    <td><a href="#" class="delete-btn" onclick="deleteCard(${index})">Delete</a></td>
+                </tr>
+            `).join('');
+            localStorage.setItem('shopCards', JSON.stringify(cards));
+        }
+        
+        // Add card
+        function addCard(e) {
+            e.preventDefault();
+            const card = {
+                type: document.getElementById('cardType').value,
+                name: document.getElementById('cardName').value,
+                number: document.getElementById('cardNumber').value,
+                exp: document.getElementById('cardExp').value,
+                cvv: document.getElementById('cardCvv').value,
+                balance: document.getElementById('cardBalance').value,
+                status: document.getElementById('cardStatus').value
+            };
+            cards.push(card);
+            renderTable();
+            document.getElementById('addCardForm').reset();
+            alert('✅ Card added successfully!');
+        }
+        
+        // Delete card
+        function deleteCard(index) {
+            if (confirm('Delete this card?')) {
+                cards.splice(index, 1);
+                renderTable();
+                alert('🗑️ Card deleted!');
+            }
+        }
+        
+        // Initial render
+        renderTable();
+    </script>
+</body>
+</html>
