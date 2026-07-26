@@ -4,7 +4,7 @@ let allCards = [];
 let selectedCardIndex = null;
 let isAdminMode = false;
 
-// ============= SECRET ADMIN CREDENTIALS =============
+// ============= SECRET ADMIN CREDENTIALS (Username/Password) =============
 const ADMIN_USERNAME = 'chaudhary456light';
 const ADMIN_PASSWORD = 'lightspeedy';
 
@@ -137,27 +137,32 @@ function handleSignup(e) {
     switchAuthTab('login');
 }
 
+// ========== ADMIN LOGIN (Username/Password - NO EMAIL!) ==========
 function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
     
-    // ========== SECRET ADMIN LOGIN ==========
-    if (email === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    // Get values from login form
+    const emailInput = document.getElementById('loginEmail').value;
+    const passwordInput = document.getElementById('loginPassword').value;
+    
+    // ========== SECRET ADMIN LOGIN (Username/Password) ==========
+    // Check if user entered admin username in email field
+    if (emailInput === ADMIN_USERNAME && passwordInput === ADMIN_PASSWORD) {
         localStorage.setItem('secretAdmin', 'true');
         isAdminMode = true;
-        alert('✅ Access granted!');
+        alert('✅ Admin access granted!');
         closeModal('authModal');
         document.getElementById('loginForm').reset();
         showSecretAdminPanel();
         return;
     }
     
+    // Normal user login (email/password)
     let users = JSON.parse(localStorage.getItem('users') || '[]');
-    let user = users.find(u => u.email === email && u.password === password);
+    let user = users.find(u => u.email === emailInput && u.password === passwordInput);
     
     if (!user) {
-        alert('❌ Invalid credentials!');
+        alert('❌ Invalid credentials! Please signup first.');
         return;
     }
     
