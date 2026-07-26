@@ -959,4 +959,55 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear
+    background: linear-gradient(135deg, #0099ff, #00ff88);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #00ccff, #00ff88);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .main-title {
+        font-size: 22px;
+    }
+    
+    .account-section {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .stats {
+        flex-direction: column;
+    }
+    
+    .stat-box {
+        min-width: auto;
+    }
+    
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        padding: 25px;
+        max-width: 95%;
+    }
+    
+    .node-info {
+        font-size: 12px;
+        gap: 10px;
+    }
+    
+    .filter-btn {
+        padding: 8px 20px;
+        font-size: 12px;
+    }
+}
